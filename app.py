@@ -120,7 +120,7 @@ def product_detail(product_id):
 @app.route("/chat", methods=["POST"])
 def chat():
     try:
-        openai.api_key = "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"
+        openai.api_key = "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"
         openai.api_base = "https://openrouter.ai/api/v1"
 
         data = request.get_json()
