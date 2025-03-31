@@ -1,6 +1,12 @@
 from flask import Flask, render_template, request, jsonify, url_for
+import os
 from flask_cors import CORS
 import pymysql
+from openai import OpenAI
+from dotenv import load_dotenv
+
+load_dotenv()
+client = OpenAI(api_key=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)
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -85,6 +91,7 @@ def product_detail(product_id):
     # Fetch product
     cursor.execute("SELECT * FROM products WHERE id = %s", (product_id,))
     product = cursor.fetchone()
+    print("API KEY:", os.getenv("OPENAI_API_KEY"))
 
     if not product:
         return "Product not found", 404
@@ -113,6 +120,28 @@ def product_detail(product_id):
         specs=specs,
         categories=categories_data
     )
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    user_message = request.json.get('message', '')
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You're a helpful assistant for an e-commerce website."},
+                {"role": "user", "content": user_message}
+            ],
+            max_tokens=200,
+            temperature=0.7
+        )
+
+        reply = response.choices[0].message.content.strip()
+    except Exception as e:
+        reply = f"⚠️ OpenAI error: {str(e)}"
+
+    return jsonify(reply=reply)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
