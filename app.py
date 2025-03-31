@@ -16,6 +16,10 @@ db = pymysql.connect(
     user=os.getenv('DB_USER'),
     password=os.getenv('DB_PASSWORD'),
     database=os.getenv('DB_NAME'),
+    port=int(os.getenv('DB_PORT')),  # use port from .env or default to 3306
+    connect_timeout=10,
+    read_timeout=10,
+    write_timeout=10    
 )
 cursor = db.cursor()
 
