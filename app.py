@@ -1,18 +1,21 @@
 from flask import Flask, render_template, request, jsonify, url_for
+from dotenv import load_dotenv
 import os
 from flask_cors import CORS
 import pymysql
 import openai
+
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
 
 # MySQL Configuration
 db = pymysql.connect(
-    host           ='sql5.freesqldatabase.com',
-    user           ='sql5770533',
-    password       ='96lRlhhNBT',
-    database       ='sql5770533',
+    host=os.getenv('DB_HOST'),
+    user=os.getenv('DB_USER'),
+    password=os.getenv('DB_PASSWORD'),
+    database=os.getenv('DB_NAME'),
 )
 cursor = db.cursor()
 
@@ -120,8 +123,8 @@ def product_detail(product_id):
 @app.route("/chat", methods=["POST"])
 def chat():
     try:
-        openai.api_key = "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"
-        openai.api_base = "https://openrouter.ai/api/v1"
+        openai.api_key = os.getenv("OPENROUTER_API_KEY")
+        openai.api_base = os.getenv("OPENAI.API_BASE")
 
         data = request.get_json()
         user_msg = data.get("message", "")
