@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify, url_for
 import os
 from flask_cors import CORS
 import pymysql
+import openai
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -115,6 +116,30 @@ def product_detail(product_id):
         specs=specs,
         categories=categories_data
     )
+
+@app.route("/chat", methods=["POST"])
+def chat():
+    try:
+        openai.api_key = "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"
+        openai.api_base = "https://openrouter.ai/api/v1"
+
+        data = request.get_json()
+        user_msg = data.get("message", "")
+
+        if not user_msg:
+            return jsonify({"error": "No message provided"}), 400
+
+        # Make the API call
+        response = openai.ChatCompletion.create(
+            model="meta-llama/llama-3.3-70b-instruct:free",
+            messages=[{"role": "user", "content": user_msg}]
+        )
+
+        reply = response['choices'][0]['message']['content']
+        return jsonify({"reply": reply})
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
