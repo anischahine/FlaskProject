@@ -141,7 +141,7 @@ def chat():
 def chat():
     message = request.json.get('message', '').lower()
 
-    reply = "🤖 I'm not sure how to help with that. Could you rephrase?"
+    reply = "🤖 I'm not sure how to help with that. Would you like to contact support at support@badercloud.com?"
 
     responses = {
         'order': "📦 You can track your order in your account > Orders.",
