@@ -13,10 +13,10 @@ CORS(app)  # Enable CORS
 
 # MySQL Configuration
 db = pymysql.connect(
-    host           ='localhost',
-    user           ='root',
-    password       ='',
-    database       ='ecommerce',
+    host           ='sql5.freesqldatabase.com',
+    user           ='sql5770533',
+    password       ='96lRlhhNBT',
+    database       ='sql5770533',
 )
 cursor = db.cursor()
 
