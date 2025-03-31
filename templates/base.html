@@ -115,6 +115,86 @@
     });
   }
 </script>
+<!-- 📦 Chatbot -->
+<style>
+#chat-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  z-index: 9999;
+  font-family: Arial, sans-serif;
+}
+#chat-header {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  font-weight: bold;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+#chat-log {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  font-size: 14px;
+}
+#chat-input {
+  width: 100%;
+  border: none;
+  border-top: 1px solid #ccc;
+  padding: 10px;
+  font-size: 14px;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+</style>
 
+<div id="chat-container">
+  <div id="chat-header">💬 Ask Me Anything</div>
+  <div id="chat-log"></div>
+  <input type="text" id="chat-input" placeholder="Type and hit Enter..." />
+</div>
+
+<script>
+  $(document).ready(function () {
+    function sendMessage() {
+      const message = $('#chat-input').val().trim(); // 🛠 Fixed ID
+      if (!message) return;
+
+      $('#chat-log').append(`<div><strong>You:</strong> ${message}</div>`);
+      $('#chat-input').val('');
+      $('#chat-log').scrollTop($('#chat-log')[0].scrollHeight);
+
+      $.ajax({
+        type: "POST",
+        url: "http://127.0.0.1:5000/chat",
+        contentType: "application/json",
+        data: JSON.stringify({ message }),
+        success: function (response) {
+          $('#chat-log').append(`<div><strong>Bot:</strong> ${response.reply}</div>`);
+          $('#chat-log').scrollTop($('#chat-log')[0].scrollHeight);
+        },
+        error: function (xhr) {
+          const errorText = xhr.responseJSON?.error || "Unknown error";
+          $('#chat-log').append(`<div class="bot-msg error">Error: ${errorText}</div>`);
+          $('#chat-log').scrollTop($('#chat-log')[0].scrollHeight);
+        }
+      });
+    }
+
+    // Send on Enter (but allow Shift+Enter for newlines if using <textarea>)
+    $('#chat-input').keypress(function (e) {
+      if (e.which === 13 && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+  });
+</script>
 </body>
 </html>
