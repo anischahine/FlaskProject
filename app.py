@@ -149,8 +149,8 @@ def chat():
         'refund': "💸 Refunds are processed within 5 business days.",
         'laptop': "💻 Yes! We have a variety of laptops in the 'Laptops' section.",
         'phone': "📱 Check out our smartphones under the 'Smartphones' category.",
-        'support': "📩 Reach our support at support@yourshop.com.",
-        'email': "📧 Our email is support@yourshop.com."
+        'support': "📩 Reach our support at support@badercloud.com.",
+        'email': "📧 Our email is support@badercloud.com."
     }
 
     for keyword, response in responses.items():
