@@ -2,11 +2,6 @@ from flask import Flask, render_template, request, jsonify, url_for
 import os
 from flask_cors import CORS
 import pymysql
-from openai import OpenAI
-from dotenv import load_dotenv
-
-load_dotenv()
-client = OpenAI(api_key=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)
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS
@@ -142,6 +137,28 @@ def chat():
 
     return jsonify(reply=reply)
 
+@app.route('/chat', methods=['POST'])
+def chat():
+    message = request.json.get('message', '').lower()
+
+    reply = "🤖 I'm not sure how to help with that. Could you rephrase?"
+
+    responses = {
+        'order': "📦 You can track your order in your account > Orders.",
+        'return': "🔄 We accept returns within 14 days of delivery.",
+        'refund': "💸 Refunds are processed within 5 business days.",
+        'laptop': "💻 Yes! We have a variety of laptops in the 'Laptops' section.",
+        'phone': "📱 Check out our smartphones under the 'Smartphones' category.",
+        'support': "📩 Reach our support at support@yourshop.com.",
+        'email': "📧 Our email is support@yourshop.com."
+    }
+
+    for keyword, response in responses.items():
+        if keyword in message:
+            reply = response
+            break
+
+    return jsonify(reply=reply)
 
 if __name__ == '__main__':
     app.run(debug=True)
