@@ -116,39 +116,5 @@ def product_detail(product_id):
         categories=categories_data
     )
 
-@app.route('/chat', methods=['POST'])
-def chat():
-    message = request.json.get('message', '').lower()
-
-    reply = "🤖 I'm not sure how to help with that. Would you like to contact support at support@yourshop.com?"
-
-    responses = {
-        'order': "📦 You can track your order in your account > Orders.",
-        'return': "🔄 We accept returns within 14 days of delivery.",
-        'refund': "💸 Refunds are processed within 5 business days.",
-        'laptop': "💻 Yes! We have a variety of laptops in the 'Laptops' section.",
-        'phone': "📱 Check out our smartphones under the 'Smartphones' category.",
-        'support': "📩 Reach our support at support@yourshop.com.",
-        'email': "📧 Our email is support@yourshop.com."
-    }
-
-    for keyword, response in responses.items():
-        if keyword in message:
-            reply = response
-            break
-
-    if "show me" in message or "find" in message:
-        keyword = message.split()[-1]  # simple keyword guess
-        cursor.execute("SELECT id, name, price FROM products WHERE name LIKE %s LIMIT 3", (f"%{keyword}%",))
-        products = cursor.fetchall()
-        if products:
-            reply = "🛒 Here are some options:<br>"
-            for p in products:
-                reply += f"- {p[1]} - ${p[2]:.2f}<br>"
-        else:
-            reply = "🔎 I couldn't find any matching products."
-
-    return jsonify(reply=reply)
-
 if __name__ == '__main__':
     app.run(debug=True)
