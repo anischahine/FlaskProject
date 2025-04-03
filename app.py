@@ -94,7 +94,6 @@ def product_detail(product_id):
     # Fetch product
     cursor.execute("SELECT * FROM products WHERE id = %s", (product_id,))
     product = cursor.fetchone()
-    print("API KEY:", os.getenv("OPENAI_API_KEY"))
 
     if not product:
         return "Product not found", 404
